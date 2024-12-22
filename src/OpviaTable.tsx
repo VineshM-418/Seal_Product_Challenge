@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { Cell, Column, Table2 } from '@blueprintjs/table';
 import { dummyTableData } from './data/dummyData';
 
@@ -11,6 +10,7 @@ const columns = [
     columnId: 'var_col_1',
   },
   { columnName: 'Volume (Litres)', columnType: 'data', columnId: 'var_col_2' },
+  { columnName: 'Cell Count', columnType: 'data', columnId: 'var_col_3' },  // New column
 ];
 
 const OpviaTable: React.FC = () => {
@@ -21,6 +21,15 @@ const OpviaTable: React.FC = () => {
 
   const cellRenderer = (rowIndex: number, columnIndex: number) => {
     const sparsePosition = getSparseRefFromIndexes(rowIndex, columnIndex);
+    const cellDensity = dummyTableData[`${1}-${rowIndex}`];  // Get the Cell Density value
+    const volume = dummyTableData[`${2}-${rowIndex}`];       // Get the Volume value
+    
+    // Calculate the Cell Count for the new column
+    if (columnIndex === 3) {
+      const cellCount = cellDensity * volume;
+      return <Cell>{String(cellCount)}</Cell>;
+    }
+
     const value = dummyTableData[sparsePosition];
     return <Cell>{String(value)}</Cell>;
   };
