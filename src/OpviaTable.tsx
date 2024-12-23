@@ -1,19 +1,12 @@
 import * as React from 'react';
 import { Cell, Column, Table2 } from '@blueprintjs/table';
-import { dummyTableData } from './data/dummyData';
 
-const columns = [
-  { columnName: 'Time', columnType: 'time', columnId: 'time_col' },
-  {
-    columnName: 'Cell Density (Cell Count/Litre)',
-    columnType: 'data',
-    columnId: 'var_col_1',
-  },
-  { columnName: 'Volume (Litres)', columnType: 'data', columnId: 'var_col_2' },
-  { columnName: 'Cell Count', columnType: 'data', columnId: 'var_col_3' },  // New column
-];
+interface OpviaTableProps {
+  columns: { columnName: string; columnType: string; columnId: string }[];
+  dummyTableData: { [key: string]: number };
+}
 
-const OpviaTable: React.FC = () => {
+const OpviaTable: React.FC<OpviaTableProps> = ({ columns, dummyTableData }) => {
   const getSparseRefFromIndexes = (
     rowIndex: number,
     columnIndex: number,
@@ -21,16 +14,7 @@ const OpviaTable: React.FC = () => {
 
   const cellRenderer = (rowIndex: number, columnIndex: number) => {
     const sparsePosition = getSparseRefFromIndexes(rowIndex, columnIndex);
-    const cellDensity = dummyTableData[`${1}-${rowIndex}`];  // Get the Cell Density value
-    const volume = dummyTableData[`${2}-${rowIndex}`];       // Get the Volume value
-    
-    // Calculate the Cell Count for the new column
-    if (columnIndex === 3) {
-      const cellCount = cellDensity * volume;
-      return <Cell>{String(cellCount)}</Cell>;
-    }
-
-    const value = dummyTableData[sparsePosition];
+    const value = dummyTableData[sparsePosition] !== undefined ? dummyTableData[sparsePosition] : '';
     return <Cell>{String(value)}</Cell>;
   };
 
